@@ -1,5 +1,6 @@
 import reflex as rx
 from ..controllers.user_controllers import get_users, get_user, delete_user
+from ..components.add_user_dialog import index as add_user_dialog
 import requests
 
 class FormState(rx.State):
@@ -86,7 +87,6 @@ def index() -> rx.Component:
                 rx.container(
                     rx.container(
                         rx.vstack(
-
                             rx.container(
                                 rx.heading("Acceso", as_="h1", align="center", style={
                                     "font-size": "1.875rem",
@@ -336,8 +336,7 @@ def index() -> rx.Component:
 
             ),
             rx.vstack(
-                rx.button("Crear cuenta", variant="ghost",
-                          color_scheme="green"),
+                add_user_dialog(),
                 rx.link(
                     rx.button("Creador por osmarmora05",
                               variant="ghost", color_scheme="gray"),

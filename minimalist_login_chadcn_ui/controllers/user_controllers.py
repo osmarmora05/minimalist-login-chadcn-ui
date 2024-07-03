@@ -40,3 +40,13 @@ def delete_user(github_username: str, password: str):
         results = session.exec(statement).one()
         session.delete(results)
         session.commit()
+
+
+def create_user(github_username: str, password: str):
+    engine = connect()
+    """"https://sqlmodel.tiangolo.com/tutorial/insert/"""
+    user = Users(github_username=github_username, password=password)
+    session = Session(engine)
+    session.add(user)
+    session.commit()
+    session.close()
