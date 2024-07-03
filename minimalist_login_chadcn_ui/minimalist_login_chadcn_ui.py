@@ -8,7 +8,9 @@ global_style = {
 
 app = rx.App(stylesheets=[
     "https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
-], style=global_style)
+], style=global_style, theme=rx.theme(
+    appearance="light"
+))
 
 
 app.add_page(login_page)
