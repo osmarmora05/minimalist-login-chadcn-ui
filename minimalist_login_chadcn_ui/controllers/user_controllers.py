@@ -30,7 +30,17 @@ def get_user(github_username: str, password: str):
             Users.github_username == github_username).where(Users.password == password)).all()
 
         return results
+    
+def get_username(github_username: str):
+    engine = connect()
+    with Session(engine) as session:
+        """
+        https://sqlmodel.tiangolo.com/tutorial/where/
+        """
+        results = session.exec(select(Users).where(
+            Users.github_username == github_username)).all()
 
+        return results
 
 def delete_user(github_username: str, password: str):
     engine = connect()

@@ -1,6 +1,7 @@
 import reflex as rx
 import requests
-from ..controllers.user_controllers import get_user, create_user
+from ..controllers.user_controllers import get_username, create_user
+from ..utils.encrypt import password_encrypt, decrypt_password
 
 class AlertDialogState(rx.State):
     new_user_entered_github_username: str = ""
@@ -67,13 +68,19 @@ class AlertDialogState(rx.State):
             self.load = False
             return rx.toast.warning("Oye! Ingresa un usuario de github valido")
 
-        user = get_user(self.new_github_username, self.new_password)
+        user = get_username(self.new_github_username)
+        is_user = False
+        for x in user:
+            if (self.new_password == decrypt_password(x.password)):
+                is_user = True
 
-        if len(user) != 0:
+        if is_user:
             self.load = False
             return rx.toast.warning("Parace que ya existe la cuenta :v")
+        
 
-        create_user(self.new_github_username, self.new_password)
+        encrypted_password = password_encrypt(self.new_password)
+        create_user(self.new_github_username, encrypted_password)
         self.isOpen = False
         return rx.toast.success("Genial! cuenta creada")
 

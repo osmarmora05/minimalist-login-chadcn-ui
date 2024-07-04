@@ -1,7 +1,9 @@
 import reflex as rx
-from ..controllers.user_controllers import get_users, get_user, delete_user
-from ..components.add_user_dialog import index as add_user_dialog
 import requests
+from ..controllers.user_controllers import get_username, delete_user
+from ..components.add_user_dialog import index as add_user_dialog
+from ..utils.encrypt import password_encrypt, decrypt_password
+
 
 class FormState(rx.State):
     # These track the user input real time for validation
@@ -66,9 +68,13 @@ class FormState(rx.State):
         self.github_username = form_data.get("github-username")
         self.password = form_data.get("password")
 
-        user = get_user(self.github_username, self.password)
+        user = get_username(self.github_username)
+        is_user = False
+        for x in user:
+            if (self.password == decrypt_password(x.password)):
+                is_user = True
 
-        if len(user) != 0:
+        if is_user:
             self.user_found = True
             self.load = False
             self.isSubmit = False
@@ -264,7 +270,7 @@ def index() -> rx.Component:
                                     )
 
                                 ),
-                            
+
                                 rx.alert_dialog.root(
                                     rx.alert_dialog.trigger(
                                         rx.button("Eliminar cuenta?",
